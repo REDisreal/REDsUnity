@@ -7,7 +7,6 @@ public class CoinManager : MonoBehaviour
 
     [Header("Coin Data")]
     [SerializeField] private int m_CoinCount = 0;
-
     public int CoinCount => m_CoinCount;
 
     private void Awake()
@@ -26,6 +25,6 @@ public class CoinManager : MonoBehaviour
     public void AddCoin(int amount = 1)
     {
         m_CoinCount += amount;
-        Debug.Log($"[CoinManager] Đã thu thập {amount} coin! Tổng cộng: {m_CoinCount}");
+        Debug.Log($"Đã thu thập {amount} coin! Tổng cộng: {m_CoinCount}");
     }
 }
