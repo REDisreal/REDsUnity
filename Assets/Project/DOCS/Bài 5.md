@@ -1,79 +1,5 @@
-# Bài 4 #
+# Bài 5 #
 ## I. Bài cũ ##
-### 1. Trigger ###
-- Trigger trong Unity là một vùng không gian Collider được thiết lập cho phép các đối tượng đi xuyên qua nhau nhưng vẫn phát hiện ra thời điểm tiếp xúc để kích hoạt sự kiện.
-- Cách hoạt động cơ bản: 
-	+ Không cản trở vật lý: Đối tượng khác sẽ đi xuyên qua Trigger chứ không bị nảy ra hay chặn lại.
-	+ Điều kiện: Ít nhất một trong hai đối tượng phải có thành phần Rigidbody (hoặc ArticulationBody) và bật tùy chọn Is Trigger trên Collider.
-- Các hàm sự kiện chính (Trigger Methods):
-	+ OnTriggerEnter(Collider other): Gọi một lần khi đối tượng bắt đầu đi vào vùng Trigger.
-	+ OnTriggerStay(Collider other): Gọi liên tục mỗi khung hình khi đối tượng vẫn đang ở bên trong vùng Trigger.
-	+ OnTriggerExit(Collider other): Gọi một lần khi đối tượng đi ra khỏi vùng Trigger.
-- Nếu không tích chọn "Is Trigger", các đối tượng sẽ va chạm, nảy ra hoặc chặn nhau lại (như quả bóng đập vào tường). Lúc này sẽ sử dụng bộ hàm OnCollision:
-	+ OnCollisionEnter(Collision collision): Gọi một lần ngay khi hai đối tượng bắt đầu chạm vào nhau.
-	+ OnCollisionStay(Collision collision): Gọi liên tục mỗi khung hình khi hai đối tượng vẫn đang tiếp xúc.
-	+ OnCollisionExit(Collision collision): Gọi một lần ngay khi hai đối tượng tách nhau ra.
-- Nếu làm game 2D và sử dụng các thành phần như Rigidbody 2D và Collider 2D thì chỉ cần thêm chữ 2D vào cuối tên các hàm:
-	+ Khi bật "Is Trigger" trong 2D: <br>
-		OnTriggerEnter2D(Collider2D other) <br>
-		OnTriggerStay2D(Collider2D other) <br>
-		OnTriggerExit2D(Collider2D other) <br>
-	+ Khi va chạm vật lý thông thường trong 2D: <br>
-		OnCollisionEnter2D(Collision2D collision) <br>
-		OnCollisionStay2D(Collision2D collision) <br>
-		OnCollisionExit2D(Collision2D collision) <br>
-		
-| Đặc điểm | Bộ hàm Trigger | Bộ hàm Collision |
-| --- | --- | --- |
-| Xuyên qua |Có (Đi xuyên qua nhau)|Không (Bị cản lại/Đẩy ra)|
-|Tham số truyền vào| Trả về Collider (Chỉ biết đối tượng đó là ai)|Trả về Collision (Chứa thêm thông tin lực va chạm, điểm tiếp xúc contacts)|
-|Hiệu năng|Nhẹ hơn, xử lý nhanh hơn|Nặng hơn do phải tính toán lực vật lý|
-### 2. Raycast 2D ###
-- Raycast 2D trong Unity là một phương thức vật lý dùng để bắn một tia thẳng (ray) từ một điểm trong không gian 2D theo một hướng nhất định nhằm phát hiện các đối tượng có chứa thành phần va chạm (Collider2D).
-- Nguyên lý hoạt động:
-	+ Điểm xuất phát (Origin): Vị trí bắt đầu bắn tia (ví dụ: vị trí nhân vật).
-	+ Hướng (Direction): Hướng mà tia di chuyển tới (ví dụ: hướng nhìn của nhân vật).
-	+ Khoảng cách (Distance): Chiều dài tối đa của tia.
-	+ Kết quả: Trả về thông tin của đối tượng đầu tiên mà tia cắt qua (RaycastHit2D), giúp biết đối tượng đó là gì, vị trí va chạm ở đâu.
-- Ứng dụng phổ biến:
-	+ Kiểm tra mặt đất (Grounded Check): Xem nhân vật đang đứng trên mặt đất hay đang nhảy trên không.
-	+ Bắn súng / Tấn công: Xác định viên đạn hoặc đòn đánh trúng kẻ địch nào.
-	+ Tương tác chuột (Click/Tap): Phát hiện người chơi bấm vào vật phẩm nào trên màn hình 2D.
-	+ Tầm nhìn của AI (Line of Sight): Kiểm tra xem kẻ địch có nhìn thấy người chơi hay bị vách ngăn che khuất.
-- Ví dụ:
-```
-// Bắn một tia từ vị trí hiện tại sang bên phải, khoảng cách là 5 đơn vị
-RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, 5f);
-
-if (hit.collider != null) {
-    // Đã va chạm với đối tượng
-    Debug.Log("Đã bắn trúng: " + hit.collider.name);
-}
-```
-### 3. Layer mask ###
-- Layer Mask trong Unity là một bộ lọc dùng để chọn hoặc loại trừ các Layer (lớp đối tượng) cụ thể khi thực hiện các tác vụ như render hình ảnh (Camera Culling Mask) hoặc kiểm tra va chạm (Raycast, Physics).
-- Ý nghĩa và Công dụng:
-	+ Giới hạn Camera (Culling Mask): Quyết định xem Camera sẽ hiển thị (vẽ) những đối tượng thuộc Layer nào và bỏ qua Layer nào.
-	+ Lọc va chạm vật lý (Physics/Raycast): Giúp hàm kiểm tra va chạm chỉ quét các đối tượng ở Layer định sẵn (ví dụ: chỉ va chạm với môi trường, bỏ qua nhân vật) để tối ưu hiệu năng.
-	+ Cách hoạt động: Layer Mask hoạt động dưới dạng mặt nạ bit (bitmask) trong lập trình, cho phép gộp nhiều Layer lại với nhau trong một biến duy nhất.
-### 4. Prefab ###
-- Prefab trong Unity là một dạng tài sản (Asset) giúp lưu trữ một GameObject cùng toàn bộ thành phần (Component) và các đối tượng con của nó để tái sử dụng nhiều lần trong dự án.
-- Định nghĩa: Prefab hoạt động như một khuôn mẫu (template).
-- Đồng bộ hóa: Khi bạn sửa đổi Prefab gốc, mọi bản sao (instance) trong Scene sẽ tự động cập nhật theo.
-- Lợi ích: Tiết kiệm thời gian, quản lý đối tượng dễ dàng và tạo ra các đối tượng khi game đang chạy (ví dụ như đạn bắn hoặc kẻ địch) thông qua code.
-### 5. Instantiate ###
-- Trong Unity, Instantiate là một hàm dùng để tạo ra một bản sao (clone) của một đối tượng có sẵn (như GameObject hoặc Prefab) khi game đang chạy.
-- Mục đích sử dụng:
-	+ Spawn nhân vật/vật phẩm: Tạo ra đạn khi bắn súng, sinh ra kẻ địch (enemy) liên tục trên màn hình.
-	+ Tạo giao diện động: Hiển thị danh sách item trong kho đồ hoặc thông báo mới.
-- Ví dụ:
-```
-public GameObject bulletPrefab; // Khai báo Prefab viên đạn
-
-// Tạo ra viên đạn tại vị trí của nhân vật (transform.position)
-Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-```
-## II. Bài mới ##
 ### 1. Action ###
 - Action trong Unity C# là một delegate (hàm ủy nhiệm) có sẵn của hệ thống, đại diện cho một hàm không trả về giá trị (kiểu void) và không có tham số truyền vào. Ngoài ra, C# cũng hỗ trợ Action<T> để đại diện cho các hàm có chứa tham số.
 - Nói một cách đơn giản, Action giống như một "thùng chứa" lệnh hoặc một hộp thư. Bạn có thể bỏ một hoặc nhiều hàm vào trong đó, sau đó chỉ cần gọi Action một lần duy nhất để kích hoạt tất cả các hàm đã lưu cùng một lúc.
@@ -346,3 +272,120 @@ private IEnumerator ShootRoutine()
 	+ yield return new WaitForSeconds(thời_gian);: Tạm dừng và chờ một khoảng thời gian (tính bằng giây).
 	+ yield return new WaitForEndOfFrame();: Chờ cho đến khi tất cả các camera và UI đã render xong frame hiện tại.
 	+ yield return new WaitUntil(() => điều_kiện);: Chờ cho đến khi điều kiện (kiểu bool) thỏa mãn.
+### 5. Generics ###
+- Hàm tự định nghĩa sử dụng Generics trong C# (Generic Method) cho phép bạn viết một phương thức duy nhất có thể hoạt động với nhiều kiểu dữ liệu khác nhau mà không cần viết lại mã.
+- Để tạo một hàm generic thêm cặp dấu ngoặc nhọn góc <T> (với T là tham số kiểu dữ liệu) ngay sau tên hàm.
+```
+public static void Print<T>(T value)
+{
+    Console.WriteLine(value);
+}
+```
+- Lợi ích của việc sử dụng Genetics:
+	+ Tái sử dụng mã: Viết một lần, dùng cho mọi kiểu dữ liệu.
+	+ An toàn kiểu dữ liệu (Type-safe): Tránh việc phải ép kiểu từ object và phát hiện lỗi ngay lúc biên dịch (compile-time).
+	+ Hiệu suất cao: Không tốn chi phí boxing/unboxing với các kiểu dữ liệu giá trị (value types).
+## II. Bài mới ##
+### 1. Animator Controller ###
+- Animator Controller trong Unity 2D là một tài nguyên (asset) dùng để quản lý và điều khiển các trạng thái hoạt ảnh (animation) cùng các quy tắc chuyển đổi (transition) giữa chúng cho một nhân vật hoặc đối tượng.
+- Nó hoạt động dựa trên mô hình State Machine (Máy trạng thái hữu hạn), giúp bạn thiết lập logic hoạt họa bằng giao diện trực quan thay vì phải viết code điều khiển phức tạp.
+- Các thành phần chính:
+	+ States (Trạng thái): Mỗi ô đại diện cho một Animation Clip (ví dụ: Idle, Run, Jump, Attack).
+	+ Transitions (Sự chuyển đổi): Các mũi tên nối giữa các State, quy định khi nào đối tượng chuyển từ hoạt ảnh này sang hoạt ảnh khác.
+	+ Parameters (Tham số): Biến số dùng làm điều kiện kích hoạt Transition (gồm 4 loại: Float, Int, Bool, và Trigger).
+	+ Any State: Trạng thái đặc biệt cho phép chuyển sang một hoạt ảnh khác từ bất kỳ trạng thái hiện tại nào (thường dùng cho hoạt ảnh bị thương, chết).
+- Cách hoạt động cơ bản trong Unity 2D:
+	1. Gắn Component: Thêm component Animator vào GameObject 2D và gán file Animator Controller vào ô Controller.
+	2. Tái cấu trúc State: Kéo thả các file .anim vào cửa sổ Animator window để tạo các State.
+	3. Cấu hình Parameter: Tạo tham số (ví dụ: isWalking kiểu Bool, Speed kiểu Float).
+	4. Tạo Condition: Tạo mũi tên nối từ Idle sang Run, cài đặt Condition: isWalking == true.
+	5. Cập nhật qua Code: Dùng C# để thay đổi tham số theo sự kiện bàn phím/gameplay.
+- Ví dụ code:
+```
+using UnityEngine;
+
+public class PlayerAnimation : MonoBehaviour
+{
+    private Animator animator;
+
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        float inputX = Input.GetAxisRaw("Horizontal");
+
+        // Chuyển đổi trạng thái di chuyển
+        if (inputX != 0)
+        {
+            animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+        }
+
+        // Kích hoạt animation nhảy
+        if (Input.GetButtonDown("Jump"))
+        {
+            animator.SetTrigger("Jump");
+        }
+    }
+}
+```
+### 2. Animator Component ###
+- Animator Component là thành phần (component) trên GameObject trong Unity, đóng vai trò làm "cầu nối" đưa các thiết lập từ Animator Controller vào đối tượng thực tế trong scene.
+
+- Nếu Animator Controller chứa sơ đồ logic và danh sách các trạng thái animation, thì Animator Component chính là bộ máy thực thi logic đó lên đối tượng.
+- Các thuộc tính quan trọng (Inspector):
+
+| Thuộc tính | Chức năng |
+| --- | --- |
+| Controller | Gán file Animator Controller chứa sơ đồ trạng thái hoạt ảnh. |
+| Avatar | Gán cấu hình xương (chủ yếu dùng cho mô hình 3D). Đối với 2D, phần này thường để trống (None). |
+| Apply Root Motion | Cho phép vị trí/xoay của GameObject bị điều khiển trực tiếp bởi animation thay vì code Transfrom. (Với 2D, thường bỏ chọn để tự xử lý di chuyển bằng Rigidbody2D/Code). |
+| Update Mode | Quy định thời điểm cập nhật animation:<br>• Normal: Cập nhật theo Update() (mặc định).<br>• Animate Physics: Cập nhật theo FixedUpdate() (dùng khi animation liên quan đến vật lý/Rigidbody2D).<br>• Unscaled Time: Cập nhật bất chấp game bị Pause (Time.timeScale = 0).|
+| Culling Mode | Tối ưu hiệu năng bằng cách dừng animation khi không xuất hiện trên màn hình (Cull Update Transforms hoặc Cull Completely). |
+### 3. Animation Clip ###
+- Animation Clip (Tệp phân đoạn hoạt ảnh) là tài nguyên cơ bản nhất trong hệ thống hoạt họa của Unity, chứa dữ liệu chuyển động thực tế của một hành động cụ thể (như Idle, Walk, Jump, hay Attack).
+
+- Trong Unity 2D, một Animation Clip lưu trữ chuỗi các hình ảnh (Sprite Keyframes) hoặc các thay đổi thuộc tính của GameObject theo thời gian.
+- Các đặc tính chính
+	+ Keyframe (Điểm mốc): Lưu lại thông số của đối tượng tại một mốc thời gian cụ thể. Giữa hai Keyframe, Unity sẽ tự động tính toán (interpolate) để chuyển động diễn ra mượt mà.
+
+	+ Property Curve (Đường cong thuộc tính): Quy định sự thay đổi của các thuộc tính theo thời gian (như vị trí Position, góc xoay Rotation, màu sắc Color, hoặc Sprite hiển thị).
+
+	+ Loop Time: Tùy chọn cho phép hoạt ảnh lặp lại liên tục khi chạy hết thời gian (dùng cho các hành động lặp như chạy, đứng yên).
+
+	+ Frame Rate (Sample Rate): Số khung hình trên mỗi giây (thường là 12 hoặc 60 fps tùy theo phong cách game 2D).
+- Cách tạo Animation Clip cho 2D trong Unity:
+	1. Mở cửa sổ Animation bằng cách chọn Window > Animation > Animation (Ctrl + 6).
+	2. Chọn GameObject cần tạo hoạt ảnh trên cửa sổ Hierarchy.
+	3. Bấm Create trên cửa sổ Animation để lưu tệp .anim mới.
+	4. Kéo thả danh sách các hình ảnh Sprite từ cửa sổ Project vào thanh thời gian (Timeline) của cửa sổ Animation.
+- Cách gọi và tương tác với Animation Clip:
+	+ Thay vì gọi trực tiếp từ code, Animation Clip thường được đưa vào Animator Controller dưới dạng một State. Tuy nhiên, bạn cũng có thể tương tác với Clip thông qua các tính năng nâng cao:
+		* Animation Events: Cho phép gắn hàm C# vào một thời điểm cụ thể trên Timeline của Clip (ví dụ: phát tiếng chân bước đúng thời điểm chân chạm đất trong Clip Walk).
+		* Override Animation Clip: Sử dụng AnimatorOverrideController nếu muốn thay đổi tập Clip mới cho nhân vật (ví dụ: đổi skin) mà không cần xây dựng lại toàn bộ sơ đồ trong Animator Controller.
+### 4. Blend tree ###
+- Blend Tree trong Unity là một dạng trạng thái đặc biệt (State) nằm bên trong Animator Controller, cho phép bạn trộn (blend) nhiều Animation Clip với nhau một cách mượt mà dựa trên các tham số (Parameters) đầu vào, thay vì phải dùng chuyển cảnh dạng bật/tắt cứng ngắc.
+- Trong game 2D, Blend Tree thường được ứng dụng phổ biến nhất để xử lý di chuyển theo nhiều hướng (4 hướng, 8 hướng) hoặc chuyển đổi độ mượt giữa Đứng yên - Đi bộ - Chạy.
+- Phân loại Blend Tree (2D):
+	+ 1D Blending: Trộn hoạt ảnh dựa trên 1 tham số (ví dụ: biến Speed). Dùng để chuyển từ Idle - Walk - Run.
+	+ 2D Simple Directional: Trộn dựa trên 2 tham số (ví dụ: MoveX và MoveY) đại diện cho các hướng di chuyển chính (Lên, Down, Left, Right). Mặc định mỗi hướng chỉ nên có 1 clip.
+	+ 2D Freeform Directional: Giống 2D Simple nhưng cho phép có nhiều clip trên cùng một hướng (ví dụ: vừa Đi bộ sang trái, vừa Chạy sang trái).
+	+ 2D Freeform Cartesian: Dùng cho 2 tham số không đại diện cho hướng (ví dụ: Angular Speed và Linear Speed).
+### 5. Finite State Machine ###
+- Finite State Machine (FSM) - Máy trạng thái hữu hạn - là một mô hình thiết kế toán học và lập trình dùng để mô tả hành vi của một hệ thống.
+
+- Hệ thống này chỉ có thể tồn tại ở bằng đúng một trạng thái (State) tại một thời điểm nhất định. Khi có các sự kiện hoặc điều kiện kích hoạt (Triggers / Events) thỏa mãn, hệ thống sẽ chuyển đổi (Transition) từ trạng thái hiện tại sang một trạng thái khác.
+- Các thành phần cốt lõi của FSM:
+	+ State (Trạng thái): Tình trạng hiện tại của hệ thống (ví dụ: Idle, Walking, Jumping, Attacking).
+
+	+ Initial State (Trạng thái ban đầu): Trạng thái mà hệ thống bắt đầu khi được khởi tạo.
+
+	+ Transition (Sự chuyển đổi): Quy tắc quy định việc chuyển từ trạng thái này sang trạng thái khác.
+
++ Event / Condition (Sự kiện / Điều kiện): Tín hiệu kích hoạt sự chuyển đổi (ví dụ: IsGrounded == false, Press Space Key).

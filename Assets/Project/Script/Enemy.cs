@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float damageAmount)
     {
         m_CurrentHealth -= damageAmount;
-        Debug.Log($"[SÁT THƯƠNG] {gameObject.name} bị trúng đạn! -{damageAmount} HP. Máu còn lại: {m_CurrentHealth}/{m_MaxHealth}");
+        Debug.Log($"{gameObject.name} bị trúng đạn! -{damageAmount} HP. Máu còn lại: {m_CurrentHealth}/{m_MaxHealth}");
 
         if (m_CurrentHealth <= 0)
         {
@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log($"[KẺ ĐỊCH GỤC NGÃ] {gameObject.name} đã bị tiêu diệt!");
+        Debug.Log($"{gameObject.name} đã bị tiêu diệt!");
         Destroy(gameObject);
     }
 

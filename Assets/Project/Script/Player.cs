@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
     [Header("Events")]
     public UnityEvent<int, int> OnAmmoChanged; // Sự kiện gửi số đạn hiện tại / tối đa
     public UnityEvent OnOutOfAmmo;            // Sự kiện thông báo hết đạn
-
     private Rigidbody2D m_Rigidbody;
     private InputAction m_MoveAction;
     private InputAction m_JumpAction;

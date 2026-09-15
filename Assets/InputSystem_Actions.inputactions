@@ -34,8 +34,8 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "New action",
-                    "type": "Value",
+                    "name": "Interact",
+                    "type": "Button",
                     "id": "0dc0f4ee-7b37-4132-a57b-83bd1a1e6a00",
                     "expectedControlType": "",
                     "processors": "",
@@ -123,34 +123,12 @@
                 },
                 {
                     "name": "",
-                    "id": "631f084f-7454-44f9-9b2c-66b75721eab3",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "ATK",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a70e518b-56f6-4c79-b8cb-a54192d56db5",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ATK",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "31a28d39-159a-4571-a170-825a61dbe819",
-                    "path": "",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
