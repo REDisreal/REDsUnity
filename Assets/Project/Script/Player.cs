@@ -16,21 +16,25 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask m_GroundLayer;
 
     [Header("Weapon Settings")]
+    [SerializeField] private Weapon m_Weapon; // Component Weapon nằm ở GameObject con
     [SerializeField] private GameObject m_BulletPrefab;
     [SerializeField] private Transform m_FirePoint;
     [SerializeField] private float m_FireRate = 2f;
-    [SerializeField] private float m_ShootDelay = 0.6f; // Thời gian trễ trước khi đạn xuất hiện (0.6s)
+    [SerializeField] private float m_ShootDelay = 0.6f;
     [SerializeField] private int m_MaxAmmo = 10;
     [SerializeField] private float m_RecoilForce = 10.0f;
 
     [Header("Audio Settings")]
-    [SerializeField] private AudioSource m_AudioSource; // Component phát âm thanh
-    [SerializeField] private AudioClip m_ShootSound;   // File âm thanh tiếng súng
+    [SerializeField] private AudioSource m_AudioSource;
+    [SerializeField] private AudioClip m_ShootSound;
 
     [Header("Events")]
-    public UnityEvent<int, int> OnAmmoChanged; // Sự kiện gửi số đạn hiện tại / tối đa
-    public UnityEvent OnOutOfAmmo;            // Sự kiện thông báo hết đạn
+    public UnityEvent<int, int> OnAmmoChanged;
+    public UnityEvent OnOutOfAmmo;
+
     private Rigidbody2D m_Rigidbody;
+    private Animator m_Animator;
+
     private InputAction m_MoveAction;
     private InputAction m_JumpAction;
     private InputAction m_ATK;
@@ -43,9 +47,12 @@ public class Player : MonoBehaviour
     private float m_NextFireTime = 0f;
     private int m_CurrentAmmo;
 
+    private static readonly int IsIdleHash = Animator.StringToHash("isIdle");
+
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody2D>();
+        m_Animator = GetComponent<Animator>();
 
         if (InputSystem.actions != null)
         {
@@ -54,7 +61,6 @@ public class Player : MonoBehaviour
             m_ATK = InputSystem.actions.FindAction("ATK");
         }
 
-        // Tự động tìm AudioSource nếu chưa được gán trên Inspector
         if (m_AudioSource == null)
         {
             m_AudioSource = GetComponent<AudioSource>();
@@ -66,7 +72,6 @@ public class Player : MonoBehaviour
         m_JumpsRemaining = m_MaxJumps;
         m_CurrentAmmo = m_MaxAmmo;
 
-        // Báo số đạn ban đầu
         OnAmmoChanged?.Invoke(m_CurrentAmmo, m_MaxAmmo);
     }
 
@@ -99,6 +104,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        UpdateAnimator();
     }
 
     private void FixedUpdate()
@@ -114,25 +121,35 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void UpdateAnimator()
+    {
+        if (m_Animator == null) return;
+
+        bool isStandingStill = Mathf.Abs(m_MoveInput) < 0.01f && m_IsGrounded;
+        m_Animator.SetBool(IsIdleHash, isStandingStill);
+    }
+
     private IEnumerator ShootRoutine()
     {
         if (m_BulletPrefab == null || m_FirePoint == null) yield break;
 
-        // Cập nhật hồi chiêu và số đạn ngay lập tức
         m_NextFireTime = Time.time + m_FireRate + m_ShootDelay;
         m_CurrentAmmo--;
         OnAmmoChanged?.Invoke(m_CurrentAmmo, m_MaxAmmo);
 
-        // 1. Phát âm thanh NGAY LẬP TỨC khi bấm nút (không delay)
+        // Bật vũ khí xuất hiện
+        if (m_Weapon != null)
+        {
+            m_Weapon.TriggerWeapon();
+        }
+
         if (m_AudioSource != null && m_ShootSound != null)
         {
             m_AudioSource.PlayOneShot(m_ShootSound);
         }
 
-        // 2. Tạm dừng 0.5s trước khi viên đạn thực sự xuất hiện
         yield return new WaitForSeconds(m_ShootDelay);
 
-        // 3. Khởi tạo viên đạn tại vị trí FirePoint
         GameObject bulletObj = Instantiate(m_BulletPrefab, m_FirePoint.position, Quaternion.identity);
         Bullet bullet = bulletObj.GetComponent<Bullet>();
 
@@ -143,7 +160,6 @@ public class Player : MonoBehaviour
             bullet.SetDirection(shootDirection);
         }
 
-        // Tác dụng lực giật lùi cho nhân vật khi đạn được bắn ra
         m_Rigidbody.AddForce(-shootDirection * m_RecoilForce, ForceMode2D.Impulse);
     }
 
