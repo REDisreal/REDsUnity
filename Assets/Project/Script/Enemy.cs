@@ -5,7 +5,8 @@ public class Enemy : MonoBehaviour
     public enum State
     {
         Patrol,
-        Chase
+        Chase,
+        Attack
     }
 
     [Header("State")]
@@ -21,13 +22,17 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float rayDistance = 0.6f;
     [SerializeField] private LayerMask wallLayer;
 
-    [Header("Detection Settings")]
+    [Header("Detection & Attack Settings")]
     [SerializeField] private Transform player;
+    [SerializeField] private float attackRange = 1.2f;
     [SerializeField] private float detectionRange = 5f;
     [SerializeField] private float loseRange = 7f;
+    [SerializeField] private float attackDamage = 10f;
+    [SerializeField] private float attackCooldown = 1.5f;
 
     private Rigidbody2D rb;
     private bool movingRight = true;
+    private float lastAttackTime;
 
     private void Awake()
     {
@@ -68,6 +73,9 @@ public class Enemy : MonoBehaviour
             case State.Chase:
                 HandleChase();
                 break;
+            case State.Attack:
+                HandleAttack();
+                break;
         }
     }
 
@@ -77,11 +85,15 @@ public class Enemy : MonoBehaviour
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (currentState == State.Patrol && distanceToPlayer <= detectionRange)
+        if (distanceToPlayer <= attackRange)
+        {
+            currentState = State.Attack;
+        }
+        else if (distanceToPlayer <= detectionRange)
         {
             currentState = State.Chase;
         }
-        else if (currentState == State.Chase && distanceToPlayer > loseRange)
+        else if (distanceToPlayer > loseRange)
         {
             currentState = State.Patrol;
         }
@@ -97,6 +109,41 @@ public class Enemy : MonoBehaviour
     {
         if (player == null) return;
 
+        LookAtPlayer();
+
+        float moveDirection = movingRight ? 1f : -1f;
+        rb.linearVelocity = new Vector2(moveDirection * chaseSpeed, rb.linearVelocity.y);
+    }
+
+    private void HandleAttack()
+    {
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+
+        LookAtPlayer();
+
+        if (Time.time >= lastAttackTime + attackCooldown)
+        {
+            PerformAttack();
+            lastAttackTime = Time.time;
+        }
+    }
+
+    private void PerformAttack()
+    {
+        if (player == null) return;
+
+        Player playerHealth = player.GetComponent<Player>();
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(attackDamage);
+            Debug.Log($"{gameObject.name} tấn công Player! Gây {attackDamage} sát thương.");
+        }
+    }
+
+    private void LookAtPlayer()
+    {
+        if (player == null) return;
+
         float directionToPlayer = player.position.x - transform.position.x;
 
         if (directionToPlayer > 0 && !movingRight)
@@ -107,9 +154,6 @@ public class Enemy : MonoBehaviour
         {
             Flip();
         }
-
-        float moveDirection = movingRight ? 1f : -1f;
-        rb.linearVelocity = new Vector2(moveDirection * chaseSpeed, rb.linearVelocity.y);
     }
 
     public void TakeDamage(float damageAmount)
@@ -154,6 +198,9 @@ public class Enemy : MonoBehaviour
         Gizmos.color = Color.red;
         Vector3 direction = movingRight ? Vector3.right : Vector3.left;
         Gizmos.DrawLine(transform.position, transform.position + direction * rayDistance);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);

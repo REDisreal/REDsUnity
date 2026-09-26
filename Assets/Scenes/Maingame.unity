@@ -693,9 +693,13 @@ GameObject:
   - component: {fileID: 189341140}
   - component: {fileID: 189341138}
   - component: {fileID: 189341137}
-  - component: {fileID: 189341142}
   - component: {fileID: 189341143}
   - component: {fileID: 189341144}
+  - component: {fileID: 189341142}
+  - component: {fileID: 189341148}
+  - component: {fileID: 189341147}
+  - component: {fileID: 189341146}
+  - component: {fileID: 189341145}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -856,53 +860,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc57cfb43bbc4841ac1e0e04c1047fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  m_MoveSpeed: 12
-  m_JumpForce: 14
-  m_MaxJumps: 1
-  m_GroundCheck: {fileID: 256439133}
-  m_GroundCheckRadius: 0.5
-  m_GroundLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  m_Weapon: {fileID: 1898017821}
-  m_BulletPrefab: {fileID: 4962925685604445642, guid: f79a6ccf7af740d45acc6e7fb79a88ed, type: 3}
-  m_FirePoint: {fileID: 1062050525}
-  m_FireRate: 2
-  m_ShootDelay: 0.6
-  m_MaxAmmo: 10
-  m_RecoilForce: 100
-  m_AudioSource: {fileID: 189341143}
-  m_ShootSound: {fileID: 8300000, guid: c333766e6298ac249850c977ebe290a0, type: 3}
-  OnAmmoChanged:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1061216480}
-        m_TargetAssemblyTypeName: DebugLogger, Assembly-CSharp
-        m_MethodName: LogAmmo
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnOutOfAmmo:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1061216480}
-        m_TargetAssemblyTypeName: DebugLogger, Assembly-CSharp
-        m_MethodName: LogOutOfAmmo
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!82 &189341143
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1022,6 +979,91 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &189341145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189341136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a05149e579929848b55c9eae9e6f1ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  m_Weapon: {fileID: 1898017821}
+  m_BulletPrefab: {fileID: 4962925685604445642, guid: f79a6ccf7af740d45acc6e7fb79a88ed, type: 3}
+  m_FirePoint: {fileID: 1062050525}
+  m_FireRate: 2
+  m_ShootDelay: 0.6
+  m_MaxAmmo: 10
+  m_RecoilForce: 10
+  m_AudioSource: {fileID: 189341143}
+  m_ShootSound: {fileID: 8300000, guid: c333766e6298ac249850c977ebe290a0, type: 3}
+  OnAmmoChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOutOfAmmo:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &189341146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189341136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0140b907133225f4782bf6b3ad42e88d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  m_DashSpeed: 30
+  m_DashDuration: 0.2
+  m_DashCooldown: 1
+--- !u!114 &189341147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189341136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb436218fe67237468923e8a7aa292b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  m_MaxHealth: 100
+  m_InvincibilityDuration: 1
+  m_SpriteRenderer: {fileID: 189341140}
+  m_AudioSource: {fileID: 189341143}
+  m_HurtSound: {fileID: 0}
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerDied:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &189341148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189341136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277c6bdab38110844a387a40079b12ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  m_MoveSpeed: 15
+  m_JumpForce: 15
+  m_MaxJumps: 1
+  m_GroundCheck: {fileID: 256439133}
+  m_GroundCheckRadius: 0.5
+  m_GroundLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &195552918
 GameObject:
   m_ObjectHideFlags: 0
@@ -3026,8 +3068,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   player: {fileID: 189341141}
+  attackRange: 1.2
   detectionRange: 2.5
   loseRange: 5
+  attackDamage: 10
+  attackCooldown: 1.5
 --- !u!1 &2032784881
 GameObject:
   m_ObjectHideFlags: 0

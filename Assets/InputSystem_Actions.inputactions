@@ -22,7 +22,7 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "ATK",
@@ -37,6 +37,15 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "0dc0f4ee-7b37-4132-a57b-83bd1a1e6a00",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "d6bb5b25-eb66-401c-a57f-63b6957eb121",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -129,6 +138,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2074e76b-43f6-4e49-9bbe-9f69812c34a1",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
